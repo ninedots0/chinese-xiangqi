@@ -1,7 +1,7 @@
 ## 项目结构
 
 ```
-src/main/java/com/ninedots0/
+src/main/java/io/github/ninedots0/
 ├── App.java                      # 程序入口
 ├── core/                         # 核心游戏逻辑
 │   ├── model/                    # 数据模型
