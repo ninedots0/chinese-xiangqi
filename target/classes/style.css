@@ -1,0 +1,385 @@
+/* Minecraft 风格样式表 */
+
+/* 根节点样式 */
+.root {
+    -fx-background-color: transparent;
+}
+
+/* 主界面背景 */
+.dirt-background {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8B4513, #A0522D);
+    -fx-background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAEklEQVQImWNgYGD4z4AEwCgCABkfAx0MZyAhAAAAAElFTkSuQmCC');
+    -fx-background-repeat: repeat;
+}
+
+/* 标题样式 */
+.minecraft-title {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 48px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-effect: dropshadow(three-pass-box, #000000, 8, 0, 0, 0);
+}
+
+.settings-title {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+}
+
+/* 按钮样式 - Minecraft 风格 */
+.minecraft-button {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: 
+        linear-gradient(from 0% 0% to 100% 0%, #6B6B6B, #8B8B8B),
+        linear-gradient(from 0% 0% to 100% 100%, #555555, #777777);
+    -fx-background-insets: 0, 2;
+    -fx-background-radius: 0;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 5, 0, 2, 2);
+    -fx-min-width: 200px;
+    -fx-min-height: 40px;
+    -fx-cursor: hand;
+}
+
+.minecraft-button:hover {
+    -fx-background-color: 
+        linear-gradient(from 0% 0% to 100% 0%, #7B7B7B, #9B9B9B),
+        linear-gradient(from 0% 0% to 100% 100%, #656565, #878787);
+    -fx-text-fill: #FFFFA0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,1.0), 8, 0, 3, 3);
+}
+
+.minecraft-button:pressed {
+    -fx-background-color: 
+        linear-gradient(from 0% 0% to 100% 0%, #5B5B5B, #7B7B7B),
+        linear-gradient(from 0% 0% to 100% 100%, #454545, #676767);
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 3, 0, 1, 1);
+}
+
+/* 透明按钮样式 */
+.trans_button {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-color: transparent;
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 0;
+    -fx-cursor: hand;
+}
+
+.trans_button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: #FFFFA0;
+    -fx-border-color: #FFFFA0;
+}
+
+.trans_button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-translate-y: 1px;
+}
+
+/* 设置界面样式 */
+.settings-container {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 15, 0, 0, 0);
+}
+
+.settings-content {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #8B8B8B;
+    -fx-border-width: 2px;
+    -fx-padding: 20px;
+}
+
+.settings-section {
+    -fx-border-color: #8B8B8B;
+    -fx-border-width: 2px;
+    -fx-background-color: #A0A0A0;
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+}
+
+.section-title {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #000000;
+    -fx-underline: true;
+}
+
+.control-label {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+    -fx-min-width: 100px;
+}
+
+/* 复选框样式 */
+.minecraft-checkbox {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+.minecraft-checkbox .box {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 2px;
+}
+
+.minecraft-checkbox:selected .mark {
+    -fx-background-color: #000000;
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+}
+
+.minecraft-checkbox:hover .box {
+    -fx-background-color: #D6D6D6;
+}
+
+/* 单选按钮样式 */
+.minecraft-radio {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+.minecraft-radio .radio {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-padding: 2px;
+}
+
+.minecraft-radio:selected .dot {
+    -fx-background-color: #000000;
+    -fx-background-radius: 5px;
+    -fx-padding: 4px;
+}
+
+.minecraft-radio:hover .radio {
+    -fx-background-color: #D6D6D6;
+}
+
+/* 滑块样式 */
+.minecraft-slider {
+    -fx-pref-width: 200px;
+}
+
+.minecraft-slider .track {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-pref-height: 8px;
+}
+
+.minecraft-slider .thumb {
+    -fx-background-color: #404040;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-pref-width: 12px;
+    -fx-pref-height: 20px;
+}
+
+.minecraft-slider .axis {
+    -fx-tick-label-fill: #000000;
+    -fx-font-family: 'Monospaced';
+    -fx-font-size: 10px;
+}
+
+.minecraft-slider:hover .thumb {
+    -fx-background-color: #505050;
+}
+
+/* 下拉框样式 */
+.minecraft-combobox {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-pref-width: 150px;
+}
+
+.minecraft-combobox .arrow-button {
+    -fx-background-color: #8B8B8B;
+    -fx-border-color: #000000;
+    -fx-border-width: 0 0 0 2px;
+}
+
+.minecraft-combobox .arrow {
+    -fx-background-color: #000000;
+}
+
+.minecraft-combobox .list-cell {
+    -fx-background-color: #C6C6C6;
+    -fx-text-fill: #000000;
+    -fx-font-family: 'Monospaced';
+    -fx-font-size: 12px;
+    -fx-padding: 5px;
+}
+
+.minecraft-combobox .list-cell:hover {
+    -fx-background-color: #D6D6D6;
+}
+
+.minecraft-combobox .list-view {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+}
+
+/* 分隔线样式 */
+.minecraft-separator {
+    -fx-background-color: #8B8B8B;
+    -fx-pref-height: 2px;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* 标签样式 */
+.minecraft-label {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+/* 文本框样式 */
+.minecraft-textfield {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-text-fill: #000000;
+    -fx-prompt-text-fill: #8B8B8B;
+}
+
+.minecraft-textfield:focused {
+    -fx-border-color: #404040;
+    -fx-border-width: 3px;
+}
+
+/* 滚动条样式 */
+.minecraft-scrollbar {
+    -fx-background-color: #C6C6C6;
+}
+
+.minecraft-scrollbar .track {
+    -fx-background-color: #A0A0A0;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+}
+
+.minecraft-scrollbar .thumb {
+    -fx-background-color: #6B6B6B;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+}
+
+.minecraft-scrollbar .thumb:hover {
+    -fx-background-color: #7B7B7B;
+}
+
+.minecraft-scrollbar .increment-button,
+.minecraft-scrollbar .decrement-button {
+    -fx-background-color: #8B8B8B;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+}
+
+/* 进度条样式 */
+.minecraft-progressbar {
+    -fx-pref-height: 20px;
+}
+
+.minecraft-progressbar .track {
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.minecraft-progressbar .bar {
+    -fx-background-color: #404040;
+    -fx-background-radius: 0;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+}
+
+/* 标签页样式 */
+.minecraft-tab-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+}
+
+.minecraft-tab-pane .tab-header-area {
+    -fx-background-color: #8B8B8B;
+}
+
+.minecraft-tab-pane .tab-header-background {
+    -fx-background-color: #8B8B8B;
+    -fx-border-color: #000000;
+    -fx-border-width: 0 0 2px 0;
+}
+
+.minecraft-tab-pane .tab {
+    -fx-background-color: #A0A0A0;
+    -fx-border-color: #000000;
+    -fx-border-width: 1px;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+    -fx-padding: 5px 10px;
+}
+
+.minecraft-tab-pane .tab:selected {
+    -fx-background-color: #C6C6C6;
+    -fx-border-width: 2px;
+}
+
+.minecraft-tab-pane .tab:hover {
+    -fx-background-color: #B0B0B0;
+}
+
+.minecraft-tab-pane .tab-label {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 12px;
+    -fx-text-fill: #000000;
+}
+
+/* 工具提示样式 */
+.minecraft-tooltip {
+    -fx-font-family: 'Monospaced', 'Courier New';
+    -fx-font-size: 11px;
+    -fx-background-color: #C6C6C6;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-text-fill: #000000;
+}
