@@ -33,7 +33,7 @@ public class Board {
         grid[7][9] = new Piece(PieceType.HORSE, true);
         grid[0][9] = new Piece(PieceType.ROOK, true);            // 车
         grid[8][9] = new Piece(PieceType.ROOK, true);
-        grid[1][7] = new Piece(PieceType.ROOK, true);          // 炮
+        grid[1][7] = new Piece(PieceType.CANNON, true);          // 炮
         grid[7][7] = new Piece(PieceType.CANNON, true);
 
         // 红兵（卒）
@@ -77,4 +77,36 @@ public class Board {
         grid[tx][ty] = grid[fx][fy];
         grid[fx][fy] = null;
     }
+
+
+    //拷贝棋盘状态
+    public Board deepCopy() {
+        Board copy = new Board();
+        copy.grid = new Piece[9][10];
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 10; y++) {
+                Piece original = this.grid[x][y];
+                if (original != null) {
+                    copy.grid[x][y] = new Piece(original.getType(), original.isRed());
+                }
+            }
+        }
+        return copy;
+    }
+    // 从另一个棋盘恢复
+    public void restoreFrom(Board other) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 10; y++) {
+                Piece original = other.grid[x][y];
+                if (original != null) {
+                    this.grid[x][y] = new Piece(original.getType(), original.isRed());
+                } else {
+                    this.grid[x][y] = null;
+                }
+            }
+        }
+    }
 }
+
+
+

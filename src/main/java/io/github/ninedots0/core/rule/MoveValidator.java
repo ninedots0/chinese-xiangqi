@@ -1,6 +1,7 @@
 package io.github.ninedots0.core.rule;
 
-import io.github.ninedots0.core.board.*;
+import io.github.ninedots0.core.board.Board;
+import io.github.ninedots0.core.board.Piece;
 
 public class MoveValidator {
 
