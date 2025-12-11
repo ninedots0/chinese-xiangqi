@@ -48,10 +48,6 @@ public class MainMenuPanel {
             centerBox.getChildren().add(loginBtn);
         centerBox.getChildren().add(settingBtn);
         
-        HBox bottomBox = new HBox();
-        Button accountBtn = new Button("account");
-        StyleUtils.applyMainMenuButton(accountBtn);
-        bottomBox.getChildren().add(accountBtn);
 
         BorderPane root = new BorderPane();
         root.setStyle(
@@ -60,7 +56,6 @@ public class MainMenuPanel {
             "-fx-background-repeat: no-repeat;"  // 不重复
         );
         root.setCenter(centerBox);
-        if (authService.getCurrentUser() != null) root.setBottom(bottomBox);
 
         return root;
     }
