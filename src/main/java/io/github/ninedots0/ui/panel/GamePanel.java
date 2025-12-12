@@ -47,7 +47,7 @@ public class GamePanel extends Pane {
         board = gameController1.getBoard(); gameController = gameController1;
         mainFrame = mainFrame1;
         this.setStyle(
-            "-fx-background-image: url('/images/board.png');" +
+            "-fx-background-image: url('/images/board.jpg');" +
             "-fx-background-size: 100% 100%;"  + // 拉伸填满
             "-fx-background-repeat: no-repeat;"  // 不重复
         );
