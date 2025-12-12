@@ -47,6 +47,10 @@ public class MainFrame extends Application {
         System.out.println(stage.getHeight());
     }
 
+    public Stage getStage() {
+        return primaryStage;
+    }
+    
     // 切换界面（核心）
     public void setRootContent(javafx.scene.Node node) {
         root.getChildren().setAll(node);

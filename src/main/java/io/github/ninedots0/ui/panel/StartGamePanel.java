@@ -1,5 +1,6 @@
 package io.github.ninedots0.ui.panel;
 
+import io.github.ninedots0.ui.util.*;
 import io.github.ninedots0.ui.frame.MainFrame;
 import io.github.ninedots0.core.save.SaveManager;
 import io.github.ninedots0.core.save.SaveData;
@@ -96,9 +97,14 @@ public class StartGamePanel extends BorderPane {
     private void loadSave(String path) {
         try {
             SaveData data = SaveManager.load(path);
-            GameController gc = new GameController(new Board(), 1);
-            gc.applySaveData(data);
-            mainFrame.showGamePanel(gc);
+            if (data == null) {
+                UIHelper.showErrorOverlay(mainFrame.getStage(), "加载存档失败");
+            }
+            else {
+                GameController gc = new GameController(new Board(), 1);
+                gc.applySaveData(data);
+                mainFrame.showGamePanel(gc);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "读取存档失败").show();

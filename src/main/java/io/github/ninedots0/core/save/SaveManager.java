@@ -104,33 +104,49 @@ public class SaveManager {
     }
 
     private static SaveData fromJson(String json) {
-        // 为简化，这里用 split 方式解析（你游戏存档不会很复杂）
-        SaveData data = new SaveData();
+        try {
+            SaveData data = new SaveData();
 
-        String piecesStr = json.split("\"pieces\":\\[")[1].split("]")[0];
-        String[] pieceObjs = piecesStr.split("\\},\\{");
+            if (!json.contains("\"pieces\":[")) return null;
+            if (!json.contains("\"redTurn\"")) return null;
 
-        List<SaveData.PieceData> list = new ArrayList<>();
+            String piecesStr = json.split("\"pieces\":\\[")[1].split("]")[0];
+            String[] pieceObjs = piecesStr.split("\\},\\{");
 
-        for (String p : pieceObjs) {
-            String obj = p.replace("{", "").replace("}", "");
+            List<SaveData.PieceData> list = new ArrayList<>();
 
-            SaveData.PieceData pd = new SaveData.PieceData();
-            pd.type = getJsonString(obj, "type");
-            pd.isRed = Boolean.parseBoolean(getJsonString(obj, "isRed"));
-            pd.x = Integer.parseInt(getJsonString(obj, "x"));
-            pd.y = Integer.parseInt(getJsonString(obj, "y"));
-            list.add(pd);
+            for (String p : pieceObjs) {
+                String obj = p.replace("{", "").replace("}", "");
+
+                SaveData.PieceData pd = new SaveData.PieceData();
+                pd.type = getJsonString(obj, "type");
+                pd.isRed = Boolean.parseBoolean(getJsonString(obj, "isRed"));
+                pd.x = Integer.parseInt(getJsonString(obj, "x"));
+                pd.y = Integer.parseInt(getJsonString(obj, "y"));
+                list.add(pd);
+            }
+
+            data.pieces = list.toArray(new SaveData.PieceData[0]);
+            data.currentPlayer = Integer.parseInt(json.split("\"redTurn\":")[1].split(",")[0]);
+
+            return data;
+
+        } catch (Exception e) {
+            // JSON 损坏 → 返回 null
+            return null;
         }
-
-        data.pieces = list.toArray(new SaveData.PieceData[0]);
-        data.currentPlayer = Integer.parseInt(json.split("\"redTurn\":")[1].split(",")[0]);
-        return data;
     }
+
 
     private static String getJsonString(String source, String key) {
-        String[] parts = source.split("\"" + key + "\":");
-        String raw = parts[1].split(",")[0];
-        return raw.replace("\"", "");
+        try {
+            String[] parts = source.split("\"" + key + "\":");
+            if (parts.length < 2) return null;
+            String raw = parts[1].split(",")[0];
+            return raw.replace("\"", "");
+        } catch (Exception e) {
+            return null;
+        }
     }
+
 }
