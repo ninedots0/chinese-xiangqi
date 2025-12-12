@@ -294,17 +294,34 @@ public class GamePanel extends Pane {
             for (int x = 0; x < 9; x++) {
                 Piece p = board.getPiece(x, y);
                 if (p != null) {
+
+                    double px = x * TILE_SIZE;
+                    double py = y * TILE_SIZE;
+
+                    double cx = px + PIECE_SIZE / 2.0;  // 圆心
+                    double cy = py + PIECE_SIZE / 2.0;
+                    double r = PIECE_SIZE / 2.0;        // 半径
+
+                    gc.save();           // 保存状态，不影响其他绘制
+                    gc.beginPath();
+                    gc.arc(cx, cy, r, r, 0, 360);  // 画圆
+                    gc.closePath();
+                    gc.clip();          // 裁切成圆形
+
                     gc.drawImage(
                         p.getImage(),
-                        x * TILE_SIZE,
-                        y * TILE_SIZE,
+                        px,
+                        py,
                         PIECE_SIZE,
                         PIECE_SIZE
                     );
+
+                    gc.restore();        // 恢复裁切
                 }
             }
         }
 
+        // 选中框依旧使用圆形框
         if (selectedX != -1) {
             gc.setStroke(Color.RED);
             gc.setLineWidth(2);
@@ -315,4 +332,5 @@ public class GamePanel extends Pane {
             );
         }
     }
+
 }
