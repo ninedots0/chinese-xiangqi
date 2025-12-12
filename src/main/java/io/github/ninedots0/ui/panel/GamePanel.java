@@ -62,8 +62,8 @@ public class GamePanel extends Pane {
         // 新增：初始化开局检测器
         openingDetector = new OpeningDetector();
         
-        Button btn = new Button("存档");
-        btn.setOnAction(e -> {
+        Button saveBtn = new Button("存档");
+        saveBtn.setOnAction(e -> {
             if (mainFrame.getAuthService().getCurrentUser() != null) {
                 try {
                     
@@ -105,8 +105,10 @@ public class GamePanel extends Pane {
         backBtn.setOnAction(e -> {mainFrame.showMainMenu();});
         backBtn.setLayoutY(90);
 
-
-        this.getChildren().addAll(canvas, btn, undoBtn, restartBtn, backBtn, overlayPane);
+        this.getChildren().add(canvas);
+        if (mainFrame.getAuthService().getCurrentUser() != null)
+            this.getChildren().add(saveBtn);
+        this.getChildren().addAll(undoBtn, restartBtn, backBtn, overlayPane);
 
         loadResources();
         draw();
