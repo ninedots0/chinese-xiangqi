@@ -204,6 +204,7 @@ public class GamePanel extends Pane {
         winLabel = new Label();
        winLabel.setStyle("""
     -fx-text-fill: #E6EFEA;
+    -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
     -fx-font-size: 36px;
     -fx-font-weight: bold;
     -fx-letter-spacing: 1.5px;
@@ -243,10 +244,10 @@ public class GamePanel extends Pane {
     -fx-effect:
         dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
 """);
-        drawLabel.setFont(Font.font("STKaiti"));
+        // drawLabel.setFont(Font.font("STKaiti"));
         drawBox.getChildren().add(drawLabel);
         drawLabel.setStyle("""
-            
+    -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
     -fx-text-fill: #344A42;
     -fx-font-size: 26px;
     -fx-font-weight: bold;

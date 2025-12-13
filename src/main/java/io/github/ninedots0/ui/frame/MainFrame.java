@@ -3,6 +3,7 @@ package io.github.ninedots0.ui.frame;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import io.github.ninedots0.ui.panel.*;
@@ -29,6 +30,14 @@ public class MainFrame extends Application {
         // root 容器
         root = new StackPane();
         scene = new Scene(root, 900, 700);
+        Font.loadFont(
+            getClass().getResourceAsStream("/fonts/SourceHanSerifSC-Regular.otf"),
+            14
+        );
+        Font.loadFont(
+            getClass().getResourceAsStream("/fonts/SourceHanSerifSC-Bold.otf"),
+            14
+        );
 
         // 初始化窗口
         WindowUtils.initStageProperties(stage, "中国象棋", true, true);
