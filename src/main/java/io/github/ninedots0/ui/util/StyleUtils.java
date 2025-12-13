@@ -74,7 +74,7 @@ public class StyleUtils {
 
         -fx-font-size: 15px;
         -fx-font-weight: bold;
-        -fx-font-family: "Microsoft YaHei", "PingFang SC", "Serif";
+        -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
         -fx-text-fill: #E6E8E3;
 
         -fx-padding: 9 40;
@@ -92,7 +92,7 @@ public class StyleUtils {
 
         -fx-font-size: 15px;
         -fx-font-weight: bold;
-        -fx-font-family: "Microsoft YaHei", "PingFang SC", "Serif";
+        -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
         -fx-text-fill: #F2F4EE;
 
         -fx-padding: 9 40;
@@ -111,7 +111,7 @@ public class StyleUtils {
 
         -fx-font-size: 15px;
         -fx-font-weight: bold;
-        -fx-font-family: "Microsoft YaHei", "PingFang SC", "Serif";
+        -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
         -fx-text-fill: #FFFFFF;
 
         -fx-padding: 10 40 8 40;

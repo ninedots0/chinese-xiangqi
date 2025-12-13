@@ -28,6 +28,8 @@ public class MainFrame extends Application {
     public void start(Stage stage) {
         this.primaryStage = stage;
         // root 容器
+        
+        AudioUtils.playBGM("/sounds/绿柚子.mp3");
         root = new StackPane();
         scene = new Scene(root, 900, 700);
         Font.loadFont(
@@ -69,7 +71,6 @@ public class MainFrame extends Application {
         setRootContent(mainMenuPanel.getContent());
     }
     public void showGamePanel(GameController gc) {
-        AudioUtils.playBGM("/sounds/Blue light.mp3");
         setRootContent(new GamePanel(gc, this));
     }
     
