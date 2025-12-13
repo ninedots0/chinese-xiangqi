@@ -150,6 +150,20 @@ public class GameController {
             this.player = player;
         }
     }
+    public void surrender() {
+        if (!gameOver) {
+            gameOver = true;
+            winner = currentPlayer == 1 ? "黑方" : "红方";
+        }
+    }
+    
+    // 新增：处理和棋
+    public void draw() {
+        if (!gameOver) {
+            gameOver = true;
+            winner = "和棋";
+        }
+    }
 }
 
 

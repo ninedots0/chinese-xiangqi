@@ -38,10 +38,15 @@ public class GamePanel extends Pane {
     private StackPane overlayPane;
     private Label infoLabel;
     private Label winLabel;
+    private Label statusLabel;
     private PauseTransition currentPause; // 记录当前的自动隐藏计时器
-    
     // 新增：开局检测器
     private OpeningDetector openingDetector;
+
+    private int lastFromX = -1;
+    private int lastFromY = -1;
+    private int lastToX = -1;
+    private int lastToY = -1;
 
     public GamePanel(GameController gameController1, MainFrame mainFrame1) {
         board = gameController1.getBoard(); gameController = gameController1;
@@ -53,7 +58,7 @@ public class GamePanel extends Pane {
         );
 
         canvas = new Canvas(600, 700);
-        canvas.setLayoutX(200); canvas.setLayoutY(10);
+        canvas.setLayoutX(350); canvas.setLayoutY(69);
         canvas.addEventHandler(MouseEvent.MOUSE_CLICKED, this::handleClick);
 
         // 新增：创建弹窗
@@ -79,16 +84,42 @@ public class GamePanel extends Pane {
             }
         });
 
+        statusLabel = new Label("红方先行");
+        statusLabel.setStyle("""
+            -fx-font-size: 16px;
+            -fx-padding: 8px;
+            -fx-background-color: #f5f5f5;
+            -fx-border-color: #cccccc;
+        """);
+        statusLabel.setLayoutX(100);
+        statusLabel.setLayoutY(20);
         // 添加悔棋按钮
         Button undoBtn = new Button("悔棋");
         undoBtn.setLayoutY(30);
         undoBtn.setOnAction(e -> {
             if (gameController.canUndo()) {
                 gameController.undo();
+                lastFromX = lastFromY = lastToX = lastToY = -1; // ⭐
                 draw();
-                // 新增：悔棋时重置开局检测
                 openingDetector.reset();
             }
+        });
+
+        Button drawBtn = new Button("求和");
+        drawBtn.setLayoutX(10);
+        drawBtn.setLayoutY(40);
+        drawBtn.setPrefWidth(60);
+        drawBtn.setOnAction(e -> {
+            // 显示求和确认对话框
+            showDrawConfirmDialog();
+        });
+        Button giveUpBtn = new Button("投降");
+        giveUpBtn.setLayoutX(10);
+        giveUpBtn.setLayoutY(100);
+        giveUpBtn.setPrefWidth(60);
+        giveUpBtn.setOnAction(e -> {
+            gameController.surrender();
+            showWinPopup(gameController.getWinner() + "获得胜利！");
         });
 
         // 添加重新开始按钮
@@ -108,13 +139,20 @@ public class GamePanel extends Pane {
         this.getChildren().add(canvas);
         if (mainFrame.getAuthService().getCurrentUser() != null)
             this.getChildren().add(saveBtn);
-        this.getChildren().addAll(undoBtn, restartBtn, backBtn, overlayPane);
+        this.getChildren().addAll(undoBtn, restartBtn, backBtn, giveUpBtn, drawBtn, overlayPane, statusLabel);
 
         loadResources();
         draw();
         
     }
-
+    private void showDrawConfirmDialog() {
+        // 隐藏其他弹窗
+        overlayPane.getChildren().get(0).setVisible(false);
+        overlayPane.getChildren().get(1).setVisible(false);
+        overlayPane.getChildren().get(2).setVisible(true);
+        overlayPane.setVisible(true);
+        overlayPane.setMouseTransparent(false);
+    }
     // 新增：创建弹窗覆盖层
     private void createPopupOverlay() {
         overlayPane = new StackPane();
@@ -155,27 +193,76 @@ public class GamePanel extends Pane {
         winLabel.setStyle("-fx-text-fill: red; -fx-font-size: 36px; -fx-font-weight: bold;");
         winLabel.setFont(Font.font("STKaiti"));
         winBox.getChildren().add(winLabel);
+
         
-        overlayPane.getChildren().addAll(infoBox, winBox);
+        // 求和确认弹窗
+        VBox drawBox = new VBox(15);
+        drawBox.setStyle(
+            "-fx-background-color: rgba(255, 192, 203, 0.95);" +
+            "-fx-background-radius: 15;" +
+            "-fx-padding: 30;" +
+            "-fx-alignment: center;" +
+            "-fx-border-color: blue;" +
+            "-fx-border-width: 3;" +
+            "-fx-border-radius: 15;"
+        );
+        drawBox.setMaxSize(350, 200);
+        Label drawLabel = new Label("双方求和？");
+        drawLabel.setStyle("-fx-text-fill: blue; -fx-font-size: 28px; -fx-font-weight: bold;");
+        drawLabel.setFont(Font.font("STKaiti"));
+        drawBox.getChildren().add(drawLabel);
+        
+        // 按钮容器
+        javafx.scene.layout.HBox buttonBox = new javafx.scene.layout.HBox(15);
+        buttonBox.setStyle("-fx-alignment: center;");
+        Button agreeBtn = new Button("同意");
+        agreeBtn.setPrefWidth(80);
+        agreeBtn.setStyle("-fx-font-size: 14px;");
+        agreeBtn.setOnAction(e -> {
+            gameController.draw();
+            overlayPane.getChildren().get(0).setVisible(false);
+            overlayPane.getChildren().get(1).setVisible(false);
+            overlayPane.getChildren().get(2).setVisible(false);
+            showWinPopup("双方和棋");
+        });
+        
+        Button disagreeBtn = new Button("不同意");
+        disagreeBtn.setPrefWidth(80);
+        disagreeBtn.setStyle("-fx-font-size: 14px;");
+        disagreeBtn.setOnAction(e -> {
+            overlayPane.getChildren().get(0).setVisible(false);
+            overlayPane.getChildren().get(1).setVisible(false);
+            overlayPane.getChildren().get(2).setVisible(false);
+            overlayPane.setVisible(false);
+            overlayPane.setMouseTransparent(true);
+        });
+        
+        buttonBox.getChildren().addAll(agreeBtn, disagreeBtn);
+        drawBox.getChildren().add(buttonBox);
+        
+        overlayPane.getChildren().addAll(infoBox, winBox, drawBox);
         winBox.setVisible(false);
+        drawBox.setVisible(false);
         
         // 居中显示
         infoBox.setTranslateX(300);
         infoBox.setTranslateY(250);
         winBox.setTranslateX(250);
         winBox.setTranslateY(200);
+        drawBox.setTranslateX(275);
+        drawBox.setTranslateY(250);
     }
 
     private void loadResources() {
         PieceType.initPieceImages();
     }
-    
     private void handleClick(MouseEvent e) {
         // 游戏结束后棋盘点击无效，但按钮仍然可以点击
         if (gameController.isGameOver()) {
             return;
         }
         
+        // System.out.printf("%f %f\n", e.getX(), e.getY());
         int x = (int) e.getX() / TILE_SIZE;
         int y = (int) e.getY() / TILE_SIZE;
         if (x * TILE_SIZE + PIECE_SIZE < e.getX()) return;
@@ -193,10 +280,21 @@ public class GamePanel extends Pane {
             }
         } else {
             // 已选 → 尝试走子
+             Piece targetPiece = board.getPiece(x, y);
+            boolean isCapturing = targetPiece != null && targetPiece.getColor() != gameController.getCurrentPlayer();
+
             boolean moveSuccess = gameController.move(selectedX, selectedY, x, y);
+            if (gameController.getCurrentPlayer() == 1) statusLabel.setText("红方行棋");
+            else statusLabel.setText("黑方行棋");
             if (moveSuccess) {
+                lastFromX= selectedX;
+                lastFromY = selectedY;
+                lastToX = x;
+                lastToY = y;
+                if (isCapturing) {
+                    showInfoPopup(targetPiece.getColor() == 1 ? "黑方吃子" : "红方吃子");
+                }
                 System.out.println("Move success!");
-                
                 // 新增：检测开局类型（只在前两步）
                 if (!openingDetector.isOpeningDetected() && openingDetector.getMoveCount() < 2) {
                     String openingType = openingDetector.detectOpening(
@@ -286,10 +384,10 @@ public class GamePanel extends Pane {
     }
 
     private void draw() {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-
+       GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.clearRect(0, 0, 600, 700);
 
+        drawLastMoveHighlight(gc);
         for (int y = 0; y < 10; y++) {
             for (int x = 0; x < 9; x++) {
                 Piece p = board.getPiece(x, y);
@@ -333,4 +431,27 @@ public class GamePanel extends Pane {
         }
     }
 
+    private void drawLastMoveHighlight(GraphicsContext gc) {
+    if (lastFromX == -1) return;
+
+    gc.setStroke(Color.rgb(255, 180, 0, 0.8));
+    gc.setLineWidth(4);
+
+    drawHighlightCircle(gc, lastFromX, lastFromY);
+    drawHighlightCircle(gc, lastToX, lastToY);
+
+    gc.setLineWidth(1);
+}
+private void drawHighlightCircle(GraphicsContext gc, int x, int y) {
+    double px = x * TILE_SIZE + PIECE_SIZE / 2.0;
+    double py = y * TILE_SIZE + PIECE_SIZE / 2.0;
+    double r = PIECE_SIZE / 2.0 + 4;
+
+    gc.strokeOval(
+        px - r,
+        py - r,
+        r * 2,
+        r * 2
+    );
+}
 }
