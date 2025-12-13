@@ -45,6 +45,7 @@ public class GamePanel extends Pane {
     private int lastFromX = -1, lastFromY = -1, lastToX = -1, lastToY = -1;
 
     public GamePanel(GameController gameController1, MainFrame mainFrame1) {
+        javafx.scene.text.Font.getFamilies().forEach(System.out::println);
         board = gameController1.getBoard(); gameController = gameController1;
         mainFrame = mainFrame1;
         this.setStyle(
@@ -64,6 +65,7 @@ public class GamePanel extends Pane {
         openingDetector = new OpeningDetector();
         
         Button saveBtn = new Button("存档");
+        saveBtn.setLayoutX(0);saveBtn.setLayoutY(0);
         StyleUtils.applyGamePanelButton(saveBtn);
         saveBtn.setOnAction(e -> {
             if (mainFrame.getAuthService().getCurrentUser() != null) {
@@ -80,14 +82,8 @@ public class GamePanel extends Pane {
         });
 
         statusLabel = new Label("红方先行");
-        statusLabel.setStyle("""
-            -fx-font-size: 16px;
-            -fx-padding: 8px;
-            -fx-background-color: #f5f5f5;
-            -fx-border-color: #cccccc;
-        """);
-        statusLabel.setLayoutX(100);
-        statusLabel.setLayoutY(20);
+        StyleUtils.applyGamePanelLabel(statusLabel);
+        statusLabel.setLayoutX(120); statusLabel.setLayoutY(350);
         // 添加悔棋按钮
         Button undoBtn = new Button("悔棋");
         StyleUtils.applyGamePanelButton(undoBtn);
@@ -154,61 +150,109 @@ public class GamePanel extends Pane {
     private void createPopupOverlay() {
         overlayPane = new StackPane();
         overlayPane.setPrefSize(900, 700);
-        overlayPane.setStyle("-fx-background-color: transparent;");
+        overlayPane.setStyle("""
+    -fx-background-color: rgba(0, 0, 0, 0.18);
+""");
         overlayPane.setVisible(false);
         overlayPane.setMouseTransparent(true);
         
         // 普通信息弹窗
         VBox infoBox = new VBox(10);
-        infoBox.setStyle(
-            "-fx-background-color: rgba(0, 0, 0, 0.7);" +
-            "-fx-background-radius: 10;" +
-            "-fx-padding: 20;" +
-            "-fx-alignment: center;"
-        );
+        infoBox.setStyle("""
+    -fx-background-color: rgba(245, 247, 244, 0.97);
+    -fx-background-radius: 12;
+    -fx-padding: 14 26;
+    -fx-alignment: center;
+
+    -fx-border-color: rgba(120, 140, 130, 0.6);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
+""");
         infoBox.setMaxSize(300, 150);
         
         infoLabel = new Label();
-        infoLabel.setStyle("-fx-text-fill: white; -fx-font-size: 24px;");
+        infoLabel.setStyle("""
+            -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
+    -fx-text-fill: #2F3E36;
+    -fx-font-size: 22px;
+    -fx-font-weight: normal;
+""");
         infoLabel.setFont(Font.font("STKaiti"));
+        // infoLabel.setLayoutX(100);
         infoBox.getChildren().add(infoLabel);
         
         // 胜利弹窗
         VBox winBox = new VBox(10);
-        winBox.setStyle(
-            "-fx-background-color: rgba(255, 215, 0, 0.9);" +
-            "-fx-background-radius: 15;" +
-            "-fx-padding: 40;" +
-            "-fx-alignment: center;" +
-            "-fx-border-color: red;" +
-            "-fx-border-width: 3;" +
-            "-fx-border-radius: 15;"
-        );
+        winBox.setStyle("""
+    -fx-background-color: rgba(28, 42, 36, 0.97);
+    -fx-background-radius: 20;
+    -fx-padding: 36 48;
+    -fx-alignment: center;
+
+    -fx-border-color: rgba(180, 200, 190, 0.6);
+    -fx-border-width: 2;
+    -fx-border-radius: 20;
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.55), 26, 0.45, 0, 6);
+""");
         winBox.setMaxSize(400, 250);
         
         winLabel = new Label();
-        winLabel.setStyle("-fx-text-fill: red; -fx-font-size: 36px; -fx-font-weight: bold;");
+       winLabel.setStyle("""
+    -fx-text-fill: #E6EFEA;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1.5px;
+""");
         winLabel.setFont(Font.font("STKaiti"));
         winBox.getChildren().add(winLabel);
-
+        
         
         // 求和确认弹窗
         VBox drawBox = new VBox(15);
-        drawBox.setStyle(
-            "-fx-background-color: rgba(255, 192, 203, 0.95);" +
-            "-fx-background-radius: 15;" +
-            "-fx-padding: 30;" +
-            "-fx-alignment: center;" +
-            "-fx-border-color: blue;" +
-            "-fx-border-width: 3;" +
-            "-fx-border-radius: 15;"
-        );
+        drawBox.setStyle("""
+    -fx-background-color: rgba(235, 240, 238, 0.98);
+    -fx-background-radius: 16;
+    -fx-padding: 26 36;
+    -fx-alignment: center;
+
+    -fx-border-color: rgba(110, 130, 120, 0.7);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
+""");
         drawBox.setMaxSize(350, 200);
         Label drawLabel = new Label("双方求和？");
-        drawLabel.setStyle("-fx-text-fill: blue; -fx-font-size: 28px; -fx-font-weight: bold;");
+        drawBox.setStyle("""
+            
+    -fx-background-color: rgba(235, 240, 238, 0.98);
+    -fx-background-radius: 16;
+    -fx-padding: 26 36;
+    -fx-alignment: center;
+
+    -fx-border-color: rgba(110, 130, 120, 0.7);
+    -fx-border-width: 1.5;
+    -fx-border-radius: 16;
+
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
+""");
         drawLabel.setFont(Font.font("STKaiti"));
         drawBox.getChildren().add(drawLabel);
-        
+        drawLabel.setStyle("""
+            
+    -fx-text-fill: #344A42;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+""");
+
+
         // 按钮容器
         javafx.scene.layout.HBox buttonBox = new javafx.scene.layout.HBox(15);
         buttonBox.setStyle("-fx-alignment: center;");
@@ -242,12 +286,12 @@ public class GamePanel extends Pane {
         drawBox.setVisible(false);
         
         // 居中显示
-        infoBox.setTranslateX(300);
-        infoBox.setTranslateY(250);
-        winBox.setTranslateX(250);
-        winBox.setTranslateY(200);
-        drawBox.setTranslateX(275);
-        drawBox.setTranslateY(250);
+        infoBox.setTranslateX(170);
+        infoBox.setTranslateY(20);
+        winBox.setTranslateX(170);
+        winBox.setTranslateY(20);
+        drawBox.setTranslateX(170);
+        drawBox.setTranslateY(20);
     }
 
     private void loadResources() {
