@@ -7,7 +7,7 @@ import io.github.ninedots0.core.game.GameController;
 import io.github.ninedots0.core.rule.OpeningDetector;
 import io.github.ninedots0.core.save.SaveManager;
 import io.github.ninedots0.ui.frame.MainFrame;
-import io.github.ninedots0.ui.util.ImageUtils;
+import io.github.ninedots0.ui.util.*;
 import javafx.animation.PauseTransition;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -36,17 +36,13 @@ public class GamePanel extends Pane {
     
     // 新增：弹窗相关
     private StackPane overlayPane;
-    private Label infoLabel;
-    private Label winLabel;
-    private Label statusLabel;
+    private Label infoLabel, winLabel, statusLabel;
+
     private PauseTransition currentPause; // 记录当前的自动隐藏计时器
     // 新增：开局检测器
     private OpeningDetector openingDetector;
 
-    private int lastFromX = -1;
-    private int lastFromY = -1;
-    private int lastToX = -1;
-    private int lastToY = -1;
+    private int lastFromX = -1, lastFromY = -1, lastToX = -1, lastToY = -1;
 
     public GamePanel(GameController gameController1, MainFrame mainFrame1) {
         board = gameController1.getBoard(); gameController = gameController1;
@@ -68,6 +64,7 @@ public class GamePanel extends Pane {
         openingDetector = new OpeningDetector();
         
         Button saveBtn = new Button("存档");
+        StyleUtils.applyGamePanelButton(saveBtn);
         saveBtn.setOnAction(e -> {
             if (mainFrame.getAuthService().getCurrentUser() != null) {
                 try {
@@ -75,8 +72,6 @@ public class GamePanel extends Pane {
                     String username = mainFrame.getAuthService().getCurrentUser().getUsername();
                     SaveManager.addNum(username);
                     String path = "saves/" + username + "/save" + SaveManager.getNum(username) + ".json";
-                    // Sys
-                    // System.out.println(path);
                     SaveManager.save(gameController, path);
                 } catch (Exception ex) {
                     ex.printStackTrace();
@@ -95,7 +90,8 @@ public class GamePanel extends Pane {
         statusLabel.setLayoutY(20);
         // 添加悔棋按钮
         Button undoBtn = new Button("悔棋");
-        undoBtn.setLayoutY(30);
+        StyleUtils.applyGamePanelButton(undoBtn);
+        undoBtn.setLayoutX(980);undoBtn.setLayoutY(700);
         undoBtn.setOnAction(e -> {
             if (gameController.canUndo()) {
                 gameController.undo();
@@ -106,17 +102,16 @@ public class GamePanel extends Pane {
         });
 
         Button drawBtn = new Button("求和");
-        drawBtn.setLayoutX(10);
-        drawBtn.setLayoutY(40);
-        drawBtn.setPrefWidth(60);
+        StyleUtils.applyGamePanelButton(drawBtn);
+        drawBtn.setLayoutX(980); drawBtn.setLayoutY(660);
         drawBtn.setOnAction(e -> {
             // 显示求和确认对话框
             showDrawConfirmDialog();
         });
+
         Button giveUpBtn = new Button("投降");
-        giveUpBtn.setLayoutX(10);
-        giveUpBtn.setLayoutY(100);
-        giveUpBtn.setPrefWidth(60);
+        StyleUtils.applyGamePanelButton(giveUpBtn);
+        giveUpBtn.setLayoutX(980); giveUpBtn.setLayoutY(620);
         giveUpBtn.setOnAction(e -> {
             gameController.surrender();
             showWinPopup(gameController.getWinner() + "获得胜利！");
@@ -124,7 +119,8 @@ public class GamePanel extends Pane {
 
         // 添加重新开始按钮
         Button restartBtn = new Button("重新开始");
-        restartBtn.setLayoutY(60);
+        StyleUtils.applyGamePanelButton(restartBtn);
+        restartBtn.setLayoutX(980); restartBtn.setLayoutY(580);
         restartBtn.setOnAction(e -> {
             // 重新开始游戏（创建新的GameController）
             // io.github.ninedots0.core.rule.MoveValidator validator = new io.github.ninedots0.core.rule.MoveValidator();
@@ -132,9 +128,10 @@ public class GamePanel extends Pane {
             mainFrame.showGamePanel(newGc);
         });
 
-        Button backBtn = new Button("返回");
+        Button backBtn = new Button("返回主菜单");
+        StyleUtils.applyGamePanelButton(backBtn);
+        backBtn.setLayoutX(0); backBtn.setLayoutY(700);
         backBtn.setOnAction(e -> {mainFrame.showMainMenu();});
-        backBtn.setLayoutY(90);
 
         this.getChildren().add(canvas);
         if (mainFrame.getAuthService().getCurrentUser() != null)
