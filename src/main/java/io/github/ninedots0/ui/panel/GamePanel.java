@@ -7,13 +7,14 @@ import io.github.ninedots0.core.game.GameController;
 import io.github.ninedots0.core.rule.OpeningDetector;
 import io.github.ninedots0.core.save.SaveManager;
 import io.github.ninedots0.ui.frame.MainFrame;
-import io.github.ninedots0.ui.util.*;
+import io.github.ninedots0.ui.util.StyleUtils;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -21,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+
 
 public class GamePanel extends Pane {
 
@@ -37,6 +39,20 @@ public class GamePanel extends Pane {
     // 新增：弹窗相关
     private StackPane overlayPane;
     private Label infoLabel, winLabel, statusLabel;
+    // 困毙弹窗的标签（运行时可设置，避免字体/编码问题）
+    private Label stalemateLabel;
+
+    // 新增：计时器相关
+    private Label timerLabel;
+    private Timeline clockTimeline;
+    private int redMainSeconds = 15 * 60;   // 15 minutes
+    private int blackMainSeconds = 15 * 60; // 15 minutes
+    private int perMoveSeconds = 60;        // 60 seconds per move
+    // 大数字倒计时相关（步时最后5秒）
+    private Label bigCountLabel;
+    private javafx.scene.layout.VBox bigCountBox;
+    private PauseTransition bigCountPause;
+    private int lastBigShown = -1;
 
     private PauseTransition currentPause; // 记录当前的自动隐藏计时器
     // 新增：开局检测器
@@ -60,6 +76,9 @@ public class GamePanel extends Pane {
 
         // 新增：创建弹窗
         createPopupOverlay();
+        // 新增：创建计时器显示并启动
+        createTimerDisplay();
+        startClock();
         
         // 新增：初始化开局检测器
         openingDetector = new OpeningDetector();
@@ -94,6 +113,9 @@ public class GamePanel extends Pane {
                 lastFromX = lastFromY = lastToX = lastToY = -1; // ⭐
                 draw();
                 openingDetector.reset();
+                // 恢复步时（避免因悔棋导致步时异常）
+                perMoveSeconds = 60;
+                lastBigShown = -1;
             }
         });
 
@@ -137,6 +159,29 @@ public class GamePanel extends Pane {
         loadResources();
         draw();
         
+    }
+
+    // 新增：显示大数字倒计时（步时最后5秒）
+    private void showBigCountdown(int n) {
+        if (bigCountLabel == null || bigCountBox == null) return;
+
+        // 如果已有暂停动画，先停掉
+        if (bigCountPause != null) {
+            bigCountPause.stop();
+            bigCountPause = null;
+        }
+
+        bigCountLabel.setText(String.valueOf(n));
+        bigCountBox.setVisible(true);
+
+        lastBigShown = n;
+
+        bigCountPause = new PauseTransition(Duration.seconds(1));
+        bigCountPause.setOnFinished(ev -> {
+            bigCountBox.setVisible(false);
+            bigCountPause = null;
+        });
+        bigCountPause.play();
     }
     private void showDrawConfirmDialog() {
         // 隐藏其他弹窗
@@ -211,8 +256,34 @@ public class GamePanel extends Pane {
 """);
         winLabel.setFont(Font.font("STKaiti"));
         winBox.getChildren().add(winLabel);
-        
-        
+        //困毙弹窗
+        VBox stalemateBox = new VBox(10);
+        stalemateBox.setStyle("""
+    -fx-background-color: rgba(245, 247, 244, 0.97);
+    -fx-background-radius: 12;
+    -fx-padding: 14 26;
+    -fx-alignment: center;  
+    -fx-border-color: rgba(120, 140, 130, 0.6);
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
+""");
+        stalemateBox.setMaxSize(300, 150);
+        stalemateLabel = new Label("困毙杀");
+        stalemateLabel.setStyle("""
+            -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
+    -fx-text-fill: #2F3E36;
+    -fx-font-size: 22px;
+    -fx-font-weight: normal;
+""");
+        stalemateLabel.setFont(Font.font("STKaiti"));
+        stalemateBox.getChildren().add(stalemateLabel);
+        stalemateBox.setVisible(false);
+        // 居中显示困毙弹窗，和其他弹窗一致
+        stalemateBox.setTranslateX(170);
+        stalemateBox.setTranslateY(20);
+
         // 求和确认弹窗
         VBox drawBox = new VBox(15);
         drawBox.setStyle("""
@@ -282,7 +353,16 @@ public class GamePanel extends Pane {
         buttonBox.getChildren().addAll(agreeBtn, disagreeBtn);
         drawBox.getChildren().add(buttonBox);
         
-        overlayPane.getChildren().addAll(infoBox, winBox, drawBox);
+        // 大数字倒计时弹窗（居中，显眼）
+        bigCountBox = new VBox();
+        bigCountBox.setStyle("-fx-alignment:center;");
+        bigCountLabel = new Label();
+        bigCountLabel.setStyle("-fx-text-fill: white; -fx-font-size: 120px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.7), 20, 0.4, 0, 4);");
+        bigCountBox.getChildren().add(bigCountLabel);
+        bigCountBox.setVisible(false);
+
+        // 按照已有方法中使用的索引顺序添加：0=infoBox,1=winBox,2=drawBox,3=stalemateBox
+        overlayPane.getChildren().addAll(infoBox, winBox, drawBox, stalemateBox);
         winBox.setVisible(false);
         drawBox.setVisible(false);
         
@@ -293,10 +373,91 @@ public class GamePanel extends Pane {
         winBox.setTranslateY(20);
         drawBox.setTranslateX(170);
         drawBox.setTranslateY(20);
+        // bigCountBox 居中显示（置于 GamePanel 顶层，避免 overlay 背景遮罩）
+        // 将 bigCountBox 从 overlayPane 移到 GamePanel 顶层，以免触发 overlayPane 的半透明背景
+        if (bigCountBox != null) {
+            bigCountBox.setVisible(false);
+            // 大数字定位于棋盘中心（棋盘 canvas 在 350,69，尺寸 600x700）
+            bigCountBox.setLayoutX(350 + 600/2 - 80);
+            bigCountBox.setLayoutY(69 + 700/2 - 110);
+            this.getChildren().add(bigCountBox);
+        }
     }
 
     private void loadResources() {
         PieceType.initPieceImages();
+    }
+
+    // 新增：创建并显示计时器标签
+    private void createTimerDisplay() {
+        timerLabel = new Label();
+        timerLabel.setStyle("-fx-font-size:14px; -fx-text-fill: white; -fx-background-color: rgba(0,0,0,0.45); -fx-padding:6 10; -fx-background-radius:6;");
+        timerLabel.setLayoutX(920);
+        timerLabel.setLayoutY(10);
+        timerLabel.setMinWidth(160);
+        timerLabel.setMinHeight(28);
+        this.getChildren().add(timerLabel);
+        updateTimerLabel();
+    }
+
+    // 新增：启动时钟（每秒触发）
+    private void startClock() {
+        if (clockTimeline != null) {
+            clockTimeline.stop();
+        }
+        clockTimeline = new Timeline(new KeyFrame(Duration.seconds(1), ev -> {
+            if (gameController.isGameOver()) {
+                stopClock();
+                return;
+            }
+
+            // 每秒减少当前玩家的局时与步时
+            if (gameController.getCurrentPlayer() == 1) {
+                redMainSeconds = Math.max(0, redMainSeconds - 1);
+            } else {
+                blackMainSeconds = Math.max(0, blackMainSeconds - 1);
+            }
+            perMoveSeconds = Math.max(0, perMoveSeconds - 1);
+
+            // 如果步时进入最后5秒，显示大数字（每秒一次）
+            if (perMoveSeconds > 0 && perMoveSeconds <= 5 && perMoveSeconds != lastBigShown) {
+                showBigCountdown(perMoveSeconds);
+            }
+
+            // 超时判负（步时或局时任一归零）
+            if (perMoveSeconds <= 0 || redMainSeconds <= 0 || blackMainSeconds <= 0) {
+                if (!gameController.isGameOver()) {
+                    // 让当前方认输，从而对手获胜
+                    gameController.surrender();
+                    showWinPopup(gameController.getWinner() + "获胜！");
+                }
+                stopClock();
+            }
+
+            updateTimerLabel();
+        }));
+        clockTimeline.setCycleCount(Timeline.INDEFINITE);
+        clockTimeline.play();
+    }
+
+    private void stopClock() {
+        if (clockTimeline != null) {
+            clockTimeline.stop();
+            clockTimeline = null;
+        }
+    }
+
+    private String formatTime(int seconds) {
+        int m = seconds / 60;
+        int s = seconds % 60;
+        return String.format("%02d:%02d", m, s);
+    }
+
+    private void updateTimerLabel() {
+        String red = formatTime(redMainSeconds);
+        String black = formatTime(blackMainSeconds);
+        String step = perMoveSeconds + "s";
+        timerLabel.setText("红 " + red + "  黑 " + black + "  步 " + step);
     }
     private void handleClick(MouseEvent e) {
         // 游戏结束后棋盘点击无效，但按钮仍然可以点击
@@ -333,6 +494,9 @@ public class GamePanel extends Pane {
                 lastFromY = selectedY;
                 lastToX = x;
                 lastToY = y;
+                // 重置步时（对下一手生效）
+                perMoveSeconds = 60;
+                lastBigShown = -1;
                 if (isCapturing) {
                     showInfoPopup(targetPiece.getColor() == 1 ? "黑方吃子" : "红方吃子");
                 }
@@ -355,9 +519,16 @@ public class GamePanel extends Pane {
                 if (checkStatus != null) {
                     showInfoPopup(checkStatus);
                 }
-                // 检查游戏是否结束
-                if (gameController.isGameOver()) {
-                    showWinPopup(gameController.getWinner() + "获得胜利！");
+                // 优先检测困毙（即使 controller 已将局判为结束，也优先展示“困毙杀”提示）
+                boolean isRedToMove = gameController.getCurrentPlayer() == 1;
+                String stalemateStatus = gameController.getCheckmateDetector().detectCheckmateOrStalemate(isRedToMove);
+                if ("困毙杀".equals(stalemateStatus)) {
+                    showStalematePopup();
+                } else {
+                    // 不是困毙时按原逻辑展示胜利弹窗
+                    if (gameController.isGameOver()) {
+                        showWinPopup(gameController.getWinner() + "获得胜利！");
+                    }
                 }
             } else {
                 // 移动失败 - 检查是否是送将
@@ -403,12 +574,19 @@ public class GamePanel extends Pane {
 
     // 新增：显示胜利弹窗（不消失）
     private void showWinPopup(String message) {
-    // 如果之前有计时器，取消它 - 防止胜利窗口被自动隐藏
+    // 停止时钟并取消自动隐藏计时器 - 防止胜利窗口被自动隐藏
     if (currentPause != null) {
-        currentPause
-.stop();
-        currentPause 
-= null;
+        currentPause.stop();
+        currentPause = null;
+    }
+    stopClock();
+    // 停止大数字计时器并隐藏
+    if (bigCountPause != null) {
+        bigCountPause.stop();
+        bigCountPause = null;
+    }
+    if (bigCountBox != null) {
+        bigCountBox.setVisible(false);
     }
     
     winLabel.setText(message);
@@ -420,6 +598,32 @@ public class GamePanel extends Pane {
     // 但整个overlayPane保持鼠标穿透，这样按钮可以点击
     overlayPane.setMouseTransparent(true);
 }
+    //显示困毙弹窗
+    private void showStalematePopup() {
+        // 如果之前有计时器，取消它
+        if (currentPause != null) {
+            currentPause.stop();
+        }   
+        // 确保文本正确（运行时设置以防止字体/编码问题）
+        if (stalemateLabel != null) {
+            stalemateLabel.setText("困毙杀");
+        }
+        // 调试日志：记录弹窗触发与当前文本
+        System.out.println("[DEBUG] showStalematePopup called, text=" + (stalemateLabel != null ? stalemateLabel.getText() : "<null>"));
+        overlayPane.getChildren().get(0).setVisible(false);
+        overlayPane.getChildren().get(1).setVisible(false);
+        overlayPane.getChildren().get(2).setVisible(false);
+        overlayPane.getChildren().get(3).setVisible(true);
+        overlayPane.setVisible(true);
+        overlayPane.setMouseTransparent(false);
+        // 1.5秒后自动消失
+        currentPause = new PauseTransition(Duration.seconds(10000));
+        currentPause.setOnFinished(event -> {
+            overlayPane.setVisible(false);
+        });
+        currentPause.play();
+    }   
+   
     // 新增：显示错误弹窗
     private void showErrorPopup(String message) {
         showInfoPopup(message);
