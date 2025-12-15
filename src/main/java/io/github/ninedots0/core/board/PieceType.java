@@ -9,8 +9,8 @@ public enum PieceType {
 
     public static void initPieceImages() {
         for(PieceType t : values()) {
-            t.redImg  = ImageUtils.load("red_" + t.name().toLowerCase() + ".png");
-            t.blackImg = ImageUtils.load("black_"  + t.name().toLowerCase() + ".png");
+            t.redImg  = ImageUtils.load("red_" + t.name().toLowerCase() + ".jpg");
+            t.blackImg = ImageUtils.load("black_"  + t.name().toLowerCase() + ".jpg");
         }
     }
 
