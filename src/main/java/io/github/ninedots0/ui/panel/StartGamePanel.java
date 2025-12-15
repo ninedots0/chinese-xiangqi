@@ -44,7 +44,6 @@ public class StartGamePanel extends BorderPane {
         newGameBtn.setMaxWidth(Double.MAX_VALUE);
         newGameBtn.setPadding(new Insets(12));
 
-        // Back button styling with rounded edges
         Button backBtn = new Button("返回主菜单");
         backBtn.setStyle("-fx-font-size: 20px; -fx-background-color: #e74c3c; -fx-text-fill: white; -fx-border-radius: 15px;");
         backBtn.setOnAction(e -> mainFrame.showMainMenu());
@@ -68,7 +67,7 @@ public class StartGamePanel extends BorderPane {
         loadSaveFiles();
     }
 
-    /** 载入当前用户的所有存档 */
+    
     private void loadSaveFiles() {
         if (mainFrame.getAuthService().getCurrentUser() == null) return;
         saveListBox.getChildren().clear();
@@ -93,7 +92,7 @@ public class StartGamePanel extends BorderPane {
         }
     }
 
-    /** 点击已有存档 → 载入 → 进入游戏界面 */
+    // 点击已有存档 → 载入 → 进入游戏界面
     private void loadSave(String path) {
         try {
             SaveData data = SaveManager.load(path);
@@ -111,7 +110,7 @@ public class StartGamePanel extends BorderPane {
         }
     }
 
-    /** 新建一个游戏 */
+    // 新建一个游戏
     private void startNewGame() {
         GameController gc = new GameController(new Board(), 1); // 自动创建新棋盘
         mainFrame.showGamePanel(gc);

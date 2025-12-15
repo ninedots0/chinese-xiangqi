@@ -29,7 +29,7 @@ public class MainFrame extends Application {
         this.primaryStage = stage;
         // root 容器
         
-        AudioUtils.playBGM("/sounds/绿柚子.mp3");
+        AudioUtils.playBGM("/sounds/夜的钢琴曲.mp3");
         root = new StackPane();
         scene = new Scene(root, 900, 700);
         Font.loadFont(

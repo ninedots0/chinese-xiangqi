@@ -18,12 +18,12 @@ public class MainMenuPanel {
     }
 
     public BorderPane getContent() {
-        VBox centerBox = new VBox(20);
+        VBox centerBox = new VBox(25);
         centerBox.setAlignment(Pos.CENTER);
 
         Label title = new Label("Chinese Xiangqi");
         title.setStyle("-fx-font-size: 31px;" +
-        "fx-font-family: 隶书" + 
+        "-fx-text-fill: #E6EFEA;" + 
         "-fx-font-weight: bold;");
 
         Button startBtn = new Button("Start");

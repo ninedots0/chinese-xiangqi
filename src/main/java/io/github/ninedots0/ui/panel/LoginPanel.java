@@ -22,12 +22,17 @@ public class LoginPanel {
 
     // ===== 最外层 BorderPane，用来将返回按钮放左下角 =====
         BorderPane root = new BorderPane();
+        root.setStyle(
+            "-fx-background-image: url('/images/setting.jpg');" +
+            "-fx-background-size: 100% 100%;"  + // 拉伸填满
+            "-fx-background-repeat: no-repeat;"  // 不重复
+        );
         // ===== 中间区域：登录内容 =====
         VBox centerBox = new VBox(20);
         centerBox.setAlignment(Pos.CENTER);
 
         Label title = new Label("用户登录");
-        title.setStyle("-fx-font-size: 26px; -fx-font-weight: bold;");
+        title.setStyle("-fx-font-family: \"Source Han Serif SC\";-fx-text-fill: #E6EFEA;-fx-font-size: 26px; -fx-font-weight: bold;");
 
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");

@@ -20,12 +20,9 @@ public class SettingPanel {
     }
 
     public StackPane getContent() {
-
-        /* ===== 根布局 ===== */
         StackPane root = new StackPane();
         root.setPadding(new Insets(30));
 
-        /* ===== 中央设置区域 ===== */
         VBox centerBox = new VBox(25);
         centerBox.setAlignment(Pos.CENTER);
 
@@ -45,15 +42,18 @@ public class SettingPanel {
 
         centerBox.getChildren().addAll(volumeLabel, volumeSlider);
 
-        /* ===== 左下角返回按钮 ===== */
         Button backBtn = new Button("返回主菜单");
         StyleUtils.applyMainMenuButton(backBtn);
         backBtn.setOnAction(e -> mainFrame.showMainMenu());
 
         StackPane.setAlignment(backBtn, Pos.BOTTOM_LEFT);
         StackPane.setMargin(backBtn, new Insets(0, 0, 10, 10));
-
-        /* ===== 组合 ===== */
+        
+        root.setStyle(
+            "-fx-background-image: url('/images/setting.jpg');" +
+            "-fx-background-size: 100% 100%;"  + // 拉伸填满
+            "-fx-background-repeat: no-repeat;"  // 不重复
+        );
         root.getChildren().addAll(centerBox, backBtn);
         return root;
     }
