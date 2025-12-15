@@ -116,6 +116,8 @@ public class GamePanel extends Pane {
                 // 恢复步时（避免因悔棋导致步时异常）
                 perMoveSeconds = 60;
                 lastBigShown = -1;
+                if (gameController.getCurrentPlayer() == 1) statusLabel.setText("红方行棋");
+                else statusLabel.setText("黑方行棋");
             }
         });
 
@@ -196,35 +198,35 @@ public class GamePanel extends Pane {
         overlayPane = new StackPane();
         overlayPane.setPrefSize(900, 700);
         overlayPane.setStyle("""
-    -fx-background-color: rgba(0, 0, 0, 0.18);
-""");
+        -fx-background-color: rgba(0, 0, 0, 0.18);
+    """);
         overlayPane.setVisible(false);
         overlayPane.setMouseTransparent(true);
         
         // 普通信息弹窗
         VBox infoBox = new VBox(10);
         infoBox.setStyle("""
-    -fx-background-color: rgba(245, 247, 244, 0.97);
-    -fx-background-radius: 12;
-    -fx-padding: 14 26;
-    -fx-alignment: center;
+            -fx-background-color: rgba(245, 247, 244, 0.97);
+            -fx-background-radius: 12;
+            -fx-padding: 14 26;
+            -fx-alignment: center;
 
-    -fx-border-color: rgba(120, 140, 130, 0.6);
-    -fx-border-width: 1;
-    -fx-border-radius: 12;
+            -fx-border-color: rgba(120, 140, 130, 0.6);
+            -fx-border-width: 1;
+            -fx-border-radius: 12;
 
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
-""");
+            -fx-effect:
+                dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
+        """);
         infoBox.setMaxSize(300, 150);
         
         infoLabel = new Label();
         infoLabel.setStyle("""
             -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
-    -fx-text-fill: #2F3E36;
-    -fx-font-size: 22px;
-    -fx-font-weight: normal;
-""");
+            -fx-text-fill: #2F3E36;
+            -fx-font-size: 22px;
+            -fx-font-weight: normal;
+        """);
         infoLabel.setFont(Font.font("STKaiti"));
         // infoLabel.setLayoutX(100);
         infoBox.getChildren().add(infoLabel);
@@ -232,51 +234,51 @@ public class GamePanel extends Pane {
         // 胜利弹窗
         VBox winBox = new VBox(10);
         winBox.setStyle("""
-    -fx-background-color: rgba(28, 42, 36, 0.97);
-    -fx-background-radius: 20;
-    -fx-padding: 36 48;
-    -fx-alignment: center;
+            -fx-background-color: rgba(28, 42, 36, 0.97);
+            -fx-background-radius: 20;
+            -fx-padding: 36 48;
+            -fx-alignment: center;
 
-    -fx-border-color: rgba(180, 200, 190, 0.6);
-    -fx-border-width: 2;
-    -fx-border-radius: 20;
+            -fx-border-color: rgba(180, 200, 190, 0.6);
+            -fx-border-width: 2;
+            -fx-border-radius: 20;
 
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.55), 26, 0.45, 0, 6);
-""");
+            -fx-effect:
+                dropshadow(gaussian, rgba(0,0,0,0.55), 26, 0.45, 0, 6);
+        """);
         winBox.setMaxSize(400, 250);
         
         winLabel = new Label();
-       winLabel.setStyle("""
-    -fx-text-fill: #E6EFEA;
-    -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
-    -fx-font-size: 36px;
-    -fx-font-weight: bold;
-    -fx-letter-spacing: 1.5px;
-""");
+        winLabel.setStyle("""
+            -fx-text-fill: #E6EFEA;
+            -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
+            -fx-font-size: 36px;
+            -fx-font-weight: bold;
+            -fx-letter-spacing: 1.5px;
+        """);
         winLabel.setFont(Font.font("STKaiti"));
         winBox.getChildren().add(winLabel);
         //困毙弹窗
         VBox stalemateBox = new VBox(10);
         stalemateBox.setStyle("""
-    -fx-background-color: rgba(245, 247, 244, 0.97);
-    -fx-background-radius: 12;
-    -fx-padding: 14 26;
-    -fx-alignment: center;  
-    -fx-border-color: rgba(120, 140, 130, 0.6);
-    -fx-border-width: 1;
-    -fx-border-radius: 12;
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
-""");
+            -fx-background-color: rgba(245, 247, 244, 0.97);
+            -fx-background-radius: 12;
+            -fx-padding: 14 26;
+            -fx-alignment: center;  
+            -fx-border-color: rgba(120, 140, 130, 0.6);
+            -fx-border-width: 1;
+            -fx-border-radius: 12;
+            -fx-effect:
+                dropshadow(gaussian, rgba(0,0,0,0.25), 12, 0.35, 0, 3);
+        """);
         stalemateBox.setMaxSize(300, 150);
         stalemateLabel = new Label("困毙杀");
         stalemateLabel.setStyle("""
-            -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
-    -fx-text-fill: #2F3E36;
-    -fx-font-size: 22px;
-    -fx-font-weight: normal;
-""");
+                    -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
+            -fx-text-fill: #2F3E36;
+            -fx-font-size: 22px;
+            -fx-font-weight: normal;
+        """);
         stalemateLabel.setFont(Font.font("STKaiti"));
         stalemateBox.getChildren().add(stalemateLabel);
         stalemateBox.setVisible(false);
@@ -287,42 +289,42 @@ public class GamePanel extends Pane {
         // 求和确认弹窗
         VBox drawBox = new VBox(15);
         drawBox.setStyle("""
-    -fx-background-color: rgba(235, 240, 238, 0.98);
-    -fx-background-radius: 16;
-    -fx-padding: 26 36;
-    -fx-alignment: center;
+            -fx-background-color: rgba(235, 240, 238, 0.98);
+            -fx-background-radius: 16;
+            -fx-padding: 26 36;
+            -fx-alignment: center;
 
-    -fx-border-color: rgba(110, 130, 120, 0.7);
-    -fx-border-width: 1.5;
-    -fx-border-radius: 16;
+            -fx-border-color: rgba(110, 130, 120, 0.7);
+            -fx-border-width: 1.5;
+            -fx-border-radius: 16;
 
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
-""");
+            -fx-effect:
+                dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
+        """);
         drawBox.setMaxSize(350, 200);
         Label drawLabel = new Label("双方求和？");
         drawBox.setStyle("""
-            
-    -fx-background-color: rgba(235, 240, 238, 0.98);
-    -fx-background-radius: 16;
-    -fx-padding: 26 36;
-    -fx-alignment: center;
+                    
+            -fx-background-color: rgba(235, 240, 238, 0.98);
+            -fx-background-radius: 16;
+            -fx-padding: 26 36;
+            -fx-alignment: center;
 
-    -fx-border-color: rgba(110, 130, 120, 0.7);
-    -fx-border-width: 1.5;
-    -fx-border-radius: 16;
+            -fx-border-color: rgba(110, 130, 120, 0.7);
+            -fx-border-width: 1.5;
+            -fx-border-radius: 16;
 
-    -fx-effect:
-        dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
-""");
-        // drawLabel.setFont(Font.font("STKaiti"));
-        drawBox.getChildren().add(drawLabel);
-        drawLabel.setStyle("""
-    -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
-    -fx-text-fill: #344A42;
-    -fx-font-size: 26px;
-    -fx-font-weight: bold;
-""");
+            -fx-effect:
+                dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.4, 0, 4);
+        """);
+                // drawLabel.setFont(Font.font("STKaiti"));
+                drawBox.getChildren().add(drawLabel);
+                drawLabel.setStyle("""
+            -fx-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Serif";
+            -fx-text-fill: #344A42;
+            -fx-font-size: 26px;
+            -fx-font-weight: bold;
+        """);
 
 
         // 按钮容器
@@ -500,7 +502,7 @@ public class GamePanel extends Pane {
                 if (isCapturing) {
                     showInfoPopup(targetPiece.getColor() == 1 ? "黑方吃子" : "红方吃子");
                 }
-                System.out.println("Move success!");
+                // System.out.println("Move success!");
                 // 新增：检测开局类型（只在前两步）
                 if (!openingDetector.isOpeningDetected() && openingDetector.getMoveCount() < 2) {
                     String openingType = openingDetector.detectOpening(
@@ -678,26 +680,26 @@ public class GamePanel extends Pane {
     }
 
     private void drawLastMoveHighlight(GraphicsContext gc) {
-    if (lastFromX == -1) return;
+        if (lastFromX == -1) return;
 
-    gc.setStroke(Color.rgb(255, 180, 0, 0.8));
-    gc.setLineWidth(4);
+        gc.setStroke(Color.rgb(255, 180, 0, 0.8));
+        gc.setLineWidth(4);
 
-    drawHighlightCircle(gc, lastFromX, lastFromY);
-    drawHighlightCircle(gc, lastToX, lastToY);
+        drawHighlightCircle(gc, lastFromX, lastFromY);
+        drawHighlightCircle(gc, lastToX, lastToY);
 
-    gc.setLineWidth(1);
-}
-private void drawHighlightCircle(GraphicsContext gc, int x, int y) {
-    double px = x * TILE_SIZE + PIECE_SIZE / 2.0;
-    double py = y * TILE_SIZE + PIECE_SIZE / 2.0;
-    double r = PIECE_SIZE / 2.0 + 4;
+        gc.setLineWidth(1);
+    }
+    private void drawHighlightCircle(GraphicsContext gc, int x, int y) {
+        double px = x * TILE_SIZE + PIECE_SIZE / 2.0;
+        double py = y * TILE_SIZE + PIECE_SIZE / 2.0;
+        double r = PIECE_SIZE / 2.0 + 4;
 
-    gc.strokeOval(
-        px - r,
-        py - r,
-        r * 2,
-        r * 2
-    );
-}
+        gc.strokeOval(
+            px - r,
+            py - r,
+            r * 2,
+            r * 2
+        );
+    }
 }
